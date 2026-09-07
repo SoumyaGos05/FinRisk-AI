@@ -1,0 +1,13 @@
+# FinRisk AI — production dependencies
+#
+# Add packages here only when they are actually imported by backend code.
+# ML/data packages (pandas, numpy, scikit-learn, yfinance) are intentionally
+# excluded from this file — add them in their own feature step.
+
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+sqlalchemy
+python-dotenv
+yfinance

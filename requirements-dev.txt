@@ -1,0 +1,8 @@
+# FinRisk AI — development/test dependencies
+#
+# Install alongside requirements.txt:
+#   pip install -r requirements.txt -r requirements-dev.txt
+
+pytest
+pytest-mock
+httpx2  # starlette TestClient requires httpx2 (httpx is deprecated for this use)
