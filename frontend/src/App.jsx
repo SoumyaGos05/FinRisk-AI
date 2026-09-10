@@ -213,7 +213,7 @@ function HomeSection({ onStartAnalysis, onNav }) {
         <div className="hero-inner">
           <div className="hero-eyebrow">
             <span className="nav-brand-dot" aria-hidden="true" />
-            Prototype Financial Risk Analysis
+            Financial Risk Analysis
           </div>
 
           <h1 className="hero-title">
@@ -223,7 +223,7 @@ function HomeSection({ onStartAnalysis, onNav }) {
 
           <p className="hero-description">
             Enter a company&rsquo;s basic financial information and receive a transparent,
-            deterministic Prototype Financial Risk Indicator with explanations for every metric.
+            deterministic Financial Risk Indicator with explanations for every metric.
           </p>
 
           <div className="hero-actions">
@@ -253,16 +253,16 @@ function HomeSection({ onStartAnalysis, onNav }) {
           <div className="section-label">Responsible AI</div>
           <h2 className="section-title">Built for transparency, not automation</h2>
           <p className="section-subtitle" style={{ marginBottom: '28px' }}>
-            All five financial metrics and the Prototype Financial Risk Indicator are computed deterministically.
+            All five financial metrics and the Financial Risk Indicator are computed deterministically.
             Gemini AI is used separately to generate an optional plain-language explanation of those already-calculated results —
             it does not calculate, modify, or override any metric value or risk classification.
           </p>
           <div className="card-grid">
             {[
               { icon: '🔢', title: 'Deterministic',          desc: 'All five metrics are computed using fixed arithmetic formulas. Same inputs always produce identical outputs.' },
-              { icon: '🏷️', title: 'Transparent Thresholds', desc: 'Every threshold is clearly labelled as a prototype threshold and explained in plain English — not hidden in a model.' },
+              { icon: '🏷️', title: 'Transparent Thresholds', desc: 'Every threshold is clearly labelled as a demonstration threshold and explained in plain English — not hidden in a model.' },
               { icon: '💡', title: 'Explainable Results',     desc: 'The results page shows which metrics contributed to the risk level and exactly why each was classified LOW, MODERATE, or HIGH.' },
-              { icon: '👤', title: 'Human Oversight',         desc: 'FinRisk AI is a decision-support prototype. All financial decisions remain the responsibility of qualified professionals.' },
+              { icon: '👤', title: 'Human Oversight',         desc: 'FinRisk AI is a financial risk decision-support tool. All financial decisions remain the responsibility of qualified professionals.' },
             ].map((c) => (
               <div key={c.title} className="card">
                 <div style={{ fontSize: '22px', marginBottom: '10px' }} aria-hidden="true">{c.icon}</div>
@@ -274,7 +274,7 @@ function HomeSection({ onStartAnalysis, onNav }) {
           <div style={{ marginTop: '22px' }}>
             <span className="rai-badge">
               <span className="rai-badge-dot" aria-hidden="true" />
-              Prototype decision-support system — not financial advice
+              Financial risk decision-support tool — not financial advice
             </span>
           </div>
         </div>
@@ -440,7 +440,7 @@ function AnalyzeSection({ onResults, isDemoLoaded, setIsDemoLoaded }) {
         <h2 className="section-title">Financial Risk Analysis</h2>
         <p className="section-subtitle" style={{ marginBottom: '32px' }}>
           Enter the company&rsquo;s financial figures below. All nine fields are required.
-          Your inputs are used to calculate the prototype indicators shown below.
+          Your inputs are used to calculate the risk indicators shown below.
         </p>
 
         <div className="analyze-layout">
@@ -534,7 +534,7 @@ function AnalyzeSection({ onResults, isDemoLoaded, setIsDemoLoaded }) {
                 </div>
               ))}
               <div style={{ marginTop: '18px', fontSize: '11.5px', color: 'var(--color-text-muted)', lineHeight: '1.55', padding: '12px', background: 'var(--color-surface)', borderRadius: 'var(--radius-sm)' }}>
-                <strong style={{ color: 'var(--color-text)' }}>Prototype thresholds</strong> are used for demonstration only and are not universal financial standards.
+                <strong style={{ color: 'var(--color-text)' }}>Demonstration thresholds</strong> are used for demonstration only and are not universal financial standards.
               </div>
             </div>
           </div>
@@ -584,9 +584,9 @@ function MetricCard({ m }) {
         className="metric-threshold-toggle"
         onClick={() => setShowThreshold((v) => !v)}
         aria-expanded={showThreshold}
-        aria-label={`${showThreshold ? 'Hide' : 'Show'} prototype threshold for ${m.name}`}
+        aria-label={`${showThreshold ? 'Hide' : 'Show'} threshold for ${m.name}`}
       >
-        {showThreshold ? '▲ Hide threshold' : '▼ Prototype threshold'}
+        {showThreshold ? '▲ Hide threshold' : '▼ Show threshold'}
       </button>
       {showThreshold && <div className="metric-threshold-note">{m.threshold_note}</div>}
     </div>
@@ -643,7 +643,7 @@ function ResultsSection({ result, isDemo, onNewAnalysis }) {
             <div className="empty-state-icon" aria-hidden="true">📊</div>
             <h2 className="empty-state-title">No analysis yet</h2>
             <p className="empty-state-desc">
-              Complete the financial analysis form to see your Prototype Financial Risk Indicator here.
+              Complete the financial analysis form to see your Financial Risk Indicator here.
             </p>
             <button className="btn-primary" onClick={onNewAnalysis}>
               Start Analysis →
@@ -682,8 +682,8 @@ function ResultsSection({ result, isDemo, onNewAnalysis }) {
         )}
 
         <div className="prototype-note">
-          <strong>Prototype Financial Risk Indicator</strong> — All thresholds are prototype thresholds and are
-          not universal financial standards. This system does not provide investment, lending, credit, or professional financial advice.
+          <strong>Financial Risk Indicator</strong> — All thresholds are simplified demonstration thresholds and are
+          not universal financial standards. This tool does not provide investment, lending, credit, or professional financial advice.
         </div>
 
         {/* Hero band: company + gauge + badge */}
@@ -698,7 +698,7 @@ function ResultsSection({ result, isDemo, onNewAnalysis }) {
           </div>
 
           <div className="results-indicator-block">
-            <div className="results-indicator-label">Prototype Financial Risk Indicator</div>
+            <div className="results-indicator-label">Financial Risk Indicator</div>
             <div className={`risk-badge ${overall_risk}`} role="status" aria-label={`Overall risk: ${overall_risk}`}>
               <span className="risk-badge-icon" aria-hidden="true">{riskIcons[overall_risk]}</span>
               {overall_risk}
@@ -822,7 +822,7 @@ function ResultsSection({ result, isDemo, onNewAnalysis }) {
 const PROCESS_STEPS = [
   { num: '1', title: 'Financial Information', desc: 'Enter 9 financial figures: revenue, profit, debt, equity, assets, liabilities.' },
   { num: '2', title: 'Five Core Metrics',     desc: 'Revenue Growth, Profit Growth, Debt-to-Equity, Current Ratio, Net Profit Margin.' },
-  { num: '3', title: 'Prototype Risk Rules',  desc: 'Each metric is classified LOW, MODERATE, or HIGH using transparent prototype thresholds.' },
+  { num: '3', title: 'Risk Rules',  desc: 'Each metric is classified LOW, MODERATE, or HIGH using transparent demonstration thresholds.' },
   { num: '4', title: 'Risk Indicator',        desc: 'The overall indicator is the worst (highest) signal across all five metrics.' },
   { num: '5', title: 'Explainable Results',   desc: 'Every metric, value, threshold, and classification is shown — no black boxes.' },
 ];
@@ -864,9 +864,9 @@ function HowItWorksSection() {
 
         {/* Threshold reference */}
         <div className="determinism-box" style={{ background: '#fff', border: '1px solid var(--color-border)', marginTop: '36px' }}>
-          <h3 style={{ color: 'var(--color-text)', marginBottom: '6px' }}>Prototype Thresholds Reference</h3>
+          <h3 style={{ color: 'var(--color-text)', marginBottom: '6px' }}>Risk Thresholds Reference</h3>
           <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '16px', fontStyle: 'italic' }}>
-            These are prototype thresholds used for demonstration purposes only. They are not universal financial standards.
+            These are simplified demonstration thresholds used for demonstration purposes only. They are not universal financial standards.
           </p>
           <div className="threshold-table-wrap">
             <table className="threshold-table">
@@ -895,13 +895,13 @@ function HowItWorksSection() {
         <div className="determinism-box">
           <h3>Deterministic Classification — AI for Explanation Only</h3>
           <p>
-            The Prototype Financial Risk Indicator is computed entirely by deterministic arithmetic.
+            The Financial Risk Indicator is computed entirely by deterministic arithmetic.
             No AI model calculates, adjusts, or overrides any metric value or risk classification.
             After the deterministic analysis is complete, Gemini AI is optionally called by the backend
             to generate a plain-language explanation of those already-calculated results.
             Gemini receives only the compact numeric output — it never influences the financial metrics
             or the LOW / MODERATE / HIGH classification.
-            All thresholds are clearly labelled as prototype thresholds throughout the application.
+            All thresholds are simplified demonstration thresholds and are not universal financial standards.
           </p>
         </div>
       </div>
@@ -913,12 +913,12 @@ function HowItWorksSection() {
 
 const RAI_PRINCIPLES = [
   { icon: '🔍', title: 'Transparency',           text: 'Every calculation, threshold, and classification is shown. There are no hidden models, no opaque scoring, and no unexplained outputs.' },
-  { icon: '👤', title: 'Human Oversight',         text: 'FinRisk AI is a decision-support prototype. Financial professionals must review and validate all outputs before any decision is made.' },
-  { icon: '⚖️', title: 'Fairness',                text: 'The same prototype thresholds are applied consistently to all inputs. No demographic or non-financial factors influence the classification.' },
+  { icon: '👤', title: 'Human Oversight',         text: 'FinRisk AI is a financial risk decision-support tool. Financial professionals must review and validate all outputs before any decision is made.' },
+  { icon: '⚖️', title: 'Fairness',                text: 'The same demonstration thresholds are applied consistently to all inputs. No demographic or non-financial factors influence the classification.' },
   { icon: '🔒', title: 'Privacy',                  text: 'Financial inputs are processed by the FinRisk AI backend for calculation. When the Gemini explanation is enabled, the backend may send the compact calculated risk results to the Google Gemini API to generate an explanation. Your raw financial inputs are not forwarded. The Gemini API key is kept server-side and is never exposed to the browser.' },
   { icon: '💡', title: 'Explainability',           text: 'The results page explains which metrics contributed to the overall risk level, what each value means, and why each threshold was triggered.' },
-  { icon: '📋', title: 'Accuracy and Limitations', text: 'FinRisk AI uses prototype thresholds that are not universal financial standards. Results reflect a simplified model and do not replace professional analysis.' },
-  { icon: '✅', title: 'Responsible Use',           text: 'FinRisk AI is intended for educational and prototype use only. It must not be used to make investment, lending, credit, or professional financial decisions.' },
+  { icon: '📋', title: 'Accuracy and Limitations', text: 'FinRisk AI uses simplified demonstration thresholds that are not universal financial standards. Results reflect a simplified model and do not replace professional analysis.' },
+  { icon: '✅', title: 'Responsible Use',           text: 'FinRisk AI is intended for educational and demonstration purposes only. It must not be used to make investment, lending, credit, or professional financial decisions.' },
 ];
 
 function ResponsibleAISection() {
@@ -944,10 +944,10 @@ function ResponsibleAISection() {
         <div className="disclaimer-box">
           <h3>Important Disclaimer</h3>
           <p>
-            FinRisk AI is a prototype decision-support system and does not provide investment,
-            lending, credit, tax, or professional financial advice. All outputs are based on
-            prototype thresholds that are not universal financial standards. Always consult a
-            qualified financial professional before making any financial decisions.
+            FinRisk AI is a financial risk decision-support tool for educational and demonstration purposes.
+            Its thresholds are simplified demonstration thresholds and are not universal financial standards.
+            It does not provide investment, lending, credit, tax, or professional financial advice.
+            Always consult a qualified financial professional before making any financial decisions.
           </p>
         </div>
       </div>
@@ -992,7 +992,7 @@ function SDG12Section() {
           </ul>
           <div className="sdg-caveat">
             <strong>Scope caveat:</strong> FinRisk AI does not directly solve SDG 12 and makes no
-            such claim. It is a prototype educational tool that supports more responsible and
+            such claim. It is an educational tool that supports more responsible and
             transparent financial decision-making within its limited scope. Its contribution to
             SDG 12 is indirect and educational in nature.
           </div>
@@ -1003,18 +1003,6 @@ function SDG12Section() {
 }
 
 // ── About Section ─────────────────────────────────────────────────────────────
-
-const FUTURE_FEATURES = [
-  'IBM Granite / watsonx.ai as an alternative or additional AI explanation provider',
-  'Financial document analysis (PDF/DOCX balance sheets)',
-  'Retrieval-Augmented Generation (RAG) for financial intelligence',
-  'Anomaly detection in multi-period financial data',
-  'Historical trend analysis across multiple periods',
-  'Financial entity extraction and relationship mapping',
-  'Continuous financial monitoring and alerts',
-  'Covenant monitoring for lending compliance',
-  'Integration with financial intelligence APIs',
-];
 
 function AboutSection() {
   return (
@@ -1027,21 +1015,21 @@ function AboutSection() {
           <div>
             <div className="about-section-title">What is FinRisk AI?</div>
             <p className="about-body">
-              FinRisk AI is a prototype financial risk decision-support system demonstrating transparent,
-              explainable financial analysis. It accepts nine basic financial inputs and produces a
-              structured Prototype Financial Risk Indicator using five core financial metrics.
+              FinRisk AI is a transparent financial risk decision-support tool with AI-powered explanations.
+              It accepts nine basic financial inputs and produces a structured Financial Risk Indicator
+              using five core financial metrics, with an optional plain-language explanation generated by Gemini AI.
             </p>
 
             <div className="about-section-title">Purpose</div>
             <p className="about-body">
-              Built as an internship MVP to demonstrate responsible AI principles in a financial context:
+              Built to demonstrate responsible AI principles in a financial context:
               deterministic calculations, transparent thresholds, explainable results, and clear
               human-oversight positioning.
             </p>
 
             <div className="about-section-title">Intended Use</div>
             <p className="about-body">
-              FinRisk AI is intended for educational, demonstration, and prototype purposes only.
+              FinRisk AI is intended for educational and demonstration purposes only.
               It is not suitable for production financial analysis, investment decisions, lending
               assessments, credit scoring, or any regulated financial activity.
             </p>
@@ -1052,35 +1040,16 @@ function AboutSection() {
               No AI model calculates, modifies, or overrides any metric value or risk classification.
               Gemini AI is used separately by the backend to generate an optional plain-language explanation
               of the already-calculated results; it does not influence the financial metrics or the
-              Prototype Financial Risk Indicator.
-              Thresholds are clearly labelled as prototype thresholds throughout the application.
+              Financial Risk Indicator.
+              Thresholds are clearly labelled as demonstration thresholds throughout the application.
             </p>
 
-            <div className="about-section-title">Prototype Limitations</div>
+            <div className="about-section-title">Limitations</div>
             <p className="about-body">
-              The prototype thresholds are simplified approximations and not universal financial standards.
+              The demonstration thresholds are simplified approximations and not universal financial standards.
               They do not account for industry sector, geography, company size, economic cycle, or other
               contextual factors that professional analysts would consider.
             </p>
-          </div>
-
-          <div>
-            <div className="future-card">
-              <div className="future-card-title">
-                <span aria-hidden="true">🔭</span> Future Scope
-              </div>
-              <div className="future-not-impl">Not yet implemented</div>
-              <p style={{ fontSize: '12.5px', color: 'var(--color-text-muted)', marginBottom: '14px', lineHeight: '1.6' }}>
-                The current MVP includes deterministic financial analysis and optional Gemini AI explanations.
-                The following features may be added in future versions.
-              </p>
-              {FUTURE_FEATURES.map((f) => (
-                <div key={f} className="future-item">
-                  <div className="future-item-dot" aria-hidden="true" />
-                  <span>{f}</span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>
@@ -1095,11 +1064,11 @@ function Footer({ onNav }) {
     <footer className="footer">
       <div className="footer-inner">
         <div className="footer-brand">FinRisk AI</div>
-        <div className="footer-tagline">Prototype Financial Risk Decision-Support System</div>
+        <div className="footer-tagline">Transparent financial risk analysis with AI-powered explanations</div>
         <div className="footer-disclaimer">
-          FinRisk AI is a prototype decision-support system and does not provide investment,
-          lending, credit, tax, or professional financial advice. All thresholds are prototype
-          thresholds and are not universal financial standards.
+          FinRisk AI is a financial risk decision-support tool for educational and demonstration purposes.
+          It does not provide investment, lending, credit, tax, or professional financial advice.
+          Its thresholds are demonstration thresholds and are not universal financial standards.
         </div>
         <nav className="footer-links" aria-label="Footer navigation">
           {[
