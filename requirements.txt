@@ -11,3 +11,4 @@ pydantic-settings
 sqlalchemy
 python-dotenv
 yfinance
+httpx
