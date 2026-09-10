@@ -24,6 +24,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from backend.ai import controller as ai_controller
+from backend.ai.gemini import GeminiProvider
 from backend.ai.controller import (
     _make_fingerprint,
     cache_size,
@@ -102,6 +103,38 @@ class TestFingerprint:
         fp = _make_fingerprint(AI_PAYLOAD)
         assert len(fp) == 64
         assert all(c in "0123456789abcdef" for c in fp)
+
+
+class TestGeminiProviderSecurity:
+    def test_model_is_normalized_and_key_stays_out_of_url(self) -> None:
+        """Model names are normalised and API key stays in the header, not in the URL."""
+        provider = GeminiProvider("AIzaFakeKey123", "  models/gemini-2.5-flash  ", 10)
+        fake_response = MagicMock()
+        fake_response.status_code = 200
+        fake_response.json.return_value = {
+            "candidates": [{"content": {"parts": [{"text": "ok explanation"}]}}]
+        }
+        with patch("backend.ai.gemini.httpx.post", return_value=fake_response) as mock_post:
+            text = provider.explain(AI_PAYLOAD)
+        assert text == "ok explanation"
+        assert provider._model == "gemini-2.5-flash"
+        called_url = mock_post.call_args.args[0]
+        assert "?key=" not in called_url
+        assert mock_post.call_args.kwargs["headers"]["x-goog-api-key"] == "AIzaFakeKey123"
+
+    def test_404_error_includes_safe_diagnostic_without_exposing_key(self) -> None:
+        """HTTP 404s surface a safe decoded message but never log or return the API key."""
+        provider = GeminiProvider("AIzaFakeKey123", "gemini-2.5-flash", 10)
+        fake_response = MagicMock()
+        fake_response.status_code = 404
+        fake_response.text = '{"error":{"message":"models/gemini-2.5-flash is not found"}}'
+        with patch("backend.ai.gemini.httpx.post", return_value=fake_response):
+            with pytest.raises(Exception) as exc_info:
+                provider.explain(AI_PAYLOAD)
+        message = str(exc_info.value)
+        assert "HTTP 404" in message
+        assert "models/gemini-2.5-flash" in message
+        assert "AIzaFakeKey123" not in message
 
 
 class TestGetAIExplanation:

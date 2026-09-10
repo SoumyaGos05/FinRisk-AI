@@ -4,7 +4,7 @@ Google Gemini AI provider — direct REST implementation via httpx.
 Uses the Gemini Developer API v1beta generateContent endpoint.
 No Google SDK is required; httpx (already a project dependency) handles HTTP.
 
-Authentication: API key passed as a query parameter (?key=...).
+Authentication: API key is sent in the x-goog-api-key header.
 This credential must NEVER appear in logs, responses, or frontend code.
 Only backend/config.py supplies the key — never read os.environ here.
 
@@ -71,11 +71,45 @@ class GeminiProvider(AIProvider):
         timeout_seconds: HTTP timeout for the provider call.
     """
 
+    @staticmethod
+    def _normalise_model_name(model: str) -> str:
+        """Trim whitespace and remove accidental 'models/' prefixes."""
+        cleaned = (model or "").strip()
+        if not cleaned:
+            raise AIProviderError("GEMINI_MODEL is missing or empty.")
+        cleaned = cleaned.replace("models/", "", 1).replace("model/", "", 1)
+        cleaned = cleaned.strip()
+        if not cleaned:
+            raise AIProviderError("GEMINI_MODEL is missing or empty.")
+        return cleaned
+
+    @staticmethod
+    def _safe_error_message(response: httpx.Response) -> str:
+        """Return a short, non-sensitive insight for HTTP failures."""
+        text = getattr(response, "text", "") or ""
+        text = text.strip()
+        if not text:
+            return "non-200 response"
+
+        try:
+            data = response.json()
+        except ValueError:
+            return text[:200].replace("\n", " ")
+
+        error = data.get("error") if isinstance(data, dict) else None
+        if isinstance(error, dict):
+            for key in ("message", "status", "code"):
+                value = error.get(key)
+                if isinstance(value, str) and value.strip():
+                    return value.strip()[:200]
+
+        return text[:200].replace("\n", " ")
+
     def __init__(self, api_key: str, model: str, timeout_seconds: int = 10) -> None:
         if not api_key or not api_key.strip():
             raise AIProviderError("GEMINI_API_KEY is missing or empty.")
         self._api_key = api_key.strip()
-        self._model = model.strip()
+        self._model = self._normalise_model_name(model)
         self._timeout = timeout_seconds
 
     def explain(self, payload: dict) -> str:
@@ -108,7 +142,7 @@ class GeminiProvider(AIProvider):
             },
         }
 
-        url = f"{_GEMINI_API_BASE}/{self._model}:generateContent?key={self._api_key}"
+        url = f"{_GEMINI_API_BASE}/{self._model}:generateContent"
 
         try:
             response = httpx.post(
@@ -123,13 +157,14 @@ class GeminiProvider(AIProvider):
             raise AIProviderError(f"Gemini network error: {exc}") from exc
 
         if response.status_code != 200:
-            # Log status (never log the key — it's in the URL query param,
-            # but httpx does not expose it in the exception message).
+            diagnostic = self._safe_error_message(response)
             logger.warning(
-                "Gemini API returned HTTP %s", response.status_code
+                "Gemini API returned HTTP %s: %s",
+                response.status_code,
+                diagnostic,
             )
             raise AIProviderError(
-                f"Gemini API error: HTTP {response.status_code}"
+                f"Gemini API error: HTTP {response.status_code} ({diagnostic})"
             )
 
         try:
