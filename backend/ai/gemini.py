@@ -114,6 +114,7 @@ class GeminiProvider(AIProvider):
             response = httpx.post(
                 url,
                 json=request_body,
+                headers={"x-goog-api-key": self._api_key},
                 timeout=self._timeout,
             )
         except httpx.TimeoutException as exc:
