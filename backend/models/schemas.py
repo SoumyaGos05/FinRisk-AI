@@ -305,6 +305,26 @@ class MetricResultSchema(BaseModel):
     threshold_note: str
 
 
+class AIExplanationSchema(BaseModel):
+    """Optional AI-generated explanation returned alongside deterministic results."""
+
+    available: bool = Field(
+        ...,
+        description="True when an AI explanation was successfully generated.",
+    )
+    text: Optional[str] = Field(
+        default=None,
+        description="Plain-text AI explanation. Present only when available=True.",
+    )
+    error: Optional[str] = Field(
+        default=None,
+        description=(
+            "Machine-readable error code when available=False. "
+            "One of: not_configured, provider_error, empty_response."
+        ),
+    )
+
+
 class FinancialRiskResponse(BaseModel):
     """Response body for the POST /risk/financial endpoint."""
 
@@ -319,3 +339,11 @@ class FinancialRiskResponse(BaseModel):
     previous_revenue: float
     current_net_profit: float
     previous_net_profit: float
+    ai_explanation: Optional[AIExplanationSchema] = Field(
+        default=None,
+        description=(
+            "Optional AI-assisted explanation. "
+            "The deterministic fields above are always authoritative. "
+            "Null when AI is not configured or unavailable."
+        ),
+    )

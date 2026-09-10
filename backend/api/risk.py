@@ -4,15 +4,22 @@ FastAPI router for risk-analysis endpoints.
 All calculation logic is delegated to ``backend.logic.risk_engine`` and
 ``backend.logic.financial_metrics`` — this module handles only HTTP concerns
 (routing, request/response serialisation, and error translation).
+
+The AI explanation controller is called *after* all deterministic calculations
+are complete.  Its result is optional — any failure leaves the deterministic
+response unchanged.
 """
 
 from fastapi import APIRouter, HTTPException
 
+from backend.ai.controller import get_ai_explanation
+from backend.config import settings as app_settings
 from backend.data.market import MarketDataError, fetch_closing_prices
 from backend.logic.financial_metrics import analyse_financial_risk
 from backend.logic.recommender import generate_recommendation
 from backend.logic.risk_engine import analyse_risk
 from backend.models.schemas import (
+    AIExplanationSchema,
     FinancialRiskRequest,
     FinancialRiskResponse,
     MetricResultSchema,
@@ -155,6 +162,11 @@ def financial_risk_endpoint(request: FinancialRiskRequest) -> FinancialRiskRespo
 
     Delegates all calculation to ``backend.logic.financial_metrics`` and maps
     any ``ValueError`` from bad inputs to a 422 Unprocessable Entity response.
+
+    After the deterministic calculation is complete, the AI explanation
+    controller is called once to produce an optional plain-text summary.
+    Any AI failure is caught and results in ai_explanation=None — the
+    deterministic response is always returned regardless.
     """
     try:
         result = analyse_financial_risk(
@@ -170,6 +182,33 @@ def financial_risk_endpoint(request: FinancialRiskRequest) -> FinancialRiskRespo
         )
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    # ------------------------------------------------------------------
+    # Extract the five metric values needed by the AI controller.
+    # These are read from the authoritative deterministic result only.
+    # ------------------------------------------------------------------
+    metrics_by_name = {m.name: m for m in result.metrics}
+
+    def _metric_value(name: str) -> float:
+        m = metrics_by_name.get(name)
+        return m.value if m is not None else 0.0
+
+    ai_payload = {
+        "risk": result.overall_risk,
+        "revenue_growth": _metric_value("Revenue Growth"),
+        "profit_growth": _metric_value("Profit Growth"),
+        "debt_to_equity": _metric_value("Debt-to-Equity"),
+        "current_ratio": _metric_value("Current Ratio"),
+        "net_profit_margin": _metric_value("Net Profit Margin"),
+    }
+
+    ai_text = get_ai_explanation(ai_payload)
+
+    if ai_text is not None:
+        ai_explanation = AIExplanationSchema(available=True, text=ai_text)
+    else:
+        err = "not_configured" if not app_settings.GEMINI_API_KEY else "provider_error"
+        ai_explanation = AIExplanationSchema(available=False, error=err)
 
     return FinancialRiskResponse(
         company_name=result.company_name,
@@ -190,4 +229,5 @@ def financial_risk_endpoint(request: FinancialRiskRequest) -> FinancialRiskRespo
         previous_revenue=result.previous_revenue,
         current_net_profit=result.current_net_profit,
         previous_net_profit=result.previous_net_profit,
+        ai_explanation=ai_explanation,
     )

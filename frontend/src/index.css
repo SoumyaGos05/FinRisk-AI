@@ -1716,3 +1716,63 @@ body {
   .hero-actions { flex-direction: column; align-items: stretch; }
   .btn-primary, .btn-secondary { justify-content: center; }
 }
+
+/* ── AI Explanation Panel ─────────────────────────────────────────────────── */
+
+.ai-explanation-panel {
+  margin-top: 28px;
+  padding: 20px 24px;
+  background: #f0f4ff;
+  border: 1px solid #c7d7f5;
+  border-radius: var(--radius-md, 8px);
+}
+
+.ai-explanation-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.ai-explanation-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 18px;
+  background: var(--color-accent, #3b82d4);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.ai-explanation-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-text, #1f2328);
+}
+
+.ai-explanation-text {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--color-text, #1f2328);
+  margin: 0 0 12px 0;
+}
+
+.ai-explanation-disclosure {
+  font-size: 11px;
+  color: var(--color-text-muted, #57606a);
+  line-height: 1.55;
+  margin: 0;
+  font-style: italic;
+}
+
+.ai-explanation-unavailable {
+  font-size: 13px;
+  color: var(--color-text-muted, #57606a);
+  line-height: 1.55;
+  margin: 0;
+}

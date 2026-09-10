@@ -592,6 +592,44 @@ function MetricCard({ m }) {
   );
 }
 
+// ── AI Explanation Panel ───────────────────────────────────────────────────────
+
+/**
+ * Displays the optional AI-generated explanation returned by the backend.
+ * The deterministic analysis is always shown — this panel is supplemental only.
+ *
+ * @param {{ aiExplanation: object|null }} props
+ */
+function AIExplanationPanel({ aiExplanation }) {
+  if (!aiExplanation) return null;
+
+  return (
+    <div className="ai-explanation-panel" aria-label="AI-Assisted Explanation">
+      <div className="ai-explanation-header">
+        <span className="ai-explanation-badge" aria-hidden="true">AI</span>
+        <span className="ai-explanation-title">AI-Assisted Explanation</span>
+      </div>
+
+      {aiExplanation.available && aiExplanation.text ? (
+        <>
+          <p className="ai-explanation-text">{aiExplanation.text}</p>
+          <p className="ai-explanation-disclosure">
+            Generated from deterministic FinRisk AI metrics.
+            AI output is explanatory only and should be independently reviewed.
+            This is not investment, lending, credit, or professional financial advice.
+          </p>
+        </>
+      ) : (
+        <p className="ai-explanation-unavailable">
+          AI explanation is temporarily unavailable. The deterministic financial analysis above is still complete and authoritative.
+        </p>
+      )}
+    </div>
+  );
+}
+
+// ── Results Section ────────────────────────────────────────────────────────────
+
 function ResultsSection({ result, isDemo, onNewAnalysis }) {
   const [expandedFactors, setExpandedFactors] = useState({});
   const [whyOpen, setWhyOpen] = useState(false);
@@ -765,6 +803,8 @@ function ResultsSection({ result, isDemo, onNewAnalysis }) {
             </>
           )}
         </div>
+
+        <AIExplanationPanel aiExplanation={result.ai_explanation} />
 
         <div className="results-actions">
           <button className="btn-primary" onClick={onNewAnalysis}>

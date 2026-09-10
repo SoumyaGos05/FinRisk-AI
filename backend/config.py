@@ -6,6 +6,8 @@ This is the ONLY module that reads from os.environ / .env — everywhere else
 imports the `settings` singleton from here.
 """
 
+from typing import Optional
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -14,6 +16,15 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str
     APP_ENV: str = "development"
+
+    # ---------------------------------------------------------------------------
+    # AI Explanation Engine — Google Gemini (optional)
+    # ---------------------------------------------------------------------------
+    # Leave GEMINI_API_KEY unset or empty to disable AI explanations entirely.
+    # The deterministic financial engine always works without these settings.
+    GEMINI_API_KEY: Optional[str] = None
+    GEMINI_MODEL: str = "gemini-2.5-flash"
+    AI_TIMEOUT_SECONDS: int = 10
 
     model_config = SettingsConfigDict(
         env_file=".env",
