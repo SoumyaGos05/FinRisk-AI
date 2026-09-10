@@ -253,8 +253,9 @@ function HomeSection({ onStartAnalysis, onNav }) {
           <div className="section-label">Responsible AI</div>
           <h2 className="section-title">Built for transparency, not automation</h2>
           <p className="section-subtitle" style={{ marginBottom: '28px' }}>
-            FinRisk AI never uses AI to calculate, modify, or override financial metrics.
-            Every number is computed deterministically. The &ldquo;AI&rdquo; reflects intelligent, explainable design — not hidden model inference.
+            All five financial metrics and the Prototype Financial Risk Indicator are computed deterministically.
+            Gemini AI is used separately to generate an optional plain-language explanation of those already-calculated results —
+            it does not calculate, modify, or override any metric value or risk classification.
           </p>
           <div className="card-grid">
             {[
@@ -892,12 +893,14 @@ function HowItWorksSection() {
         </div>
 
         <div className="determinism-box">
-          <h3>Fully Deterministic — No AI Classification</h3>
+          <h3>Deterministic Classification — AI for Explanation Only</h3>
           <p>
             The Prototype Financial Risk Indicator is computed entirely by deterministic arithmetic.
-            No machine-learning model, large language model, or AI service calculates, adjusts, or
-            overrides any metric value or risk classification. The &ldquo;AI&rdquo; in FinRisk AI refers to
-            the system&rsquo;s intelligent, explainable design — not hidden model inference.
+            No AI model calculates, adjusts, or overrides any metric value or risk classification.
+            After the deterministic analysis is complete, Gemini AI is optionally called by the backend
+            to generate a plain-language explanation of those already-calculated results.
+            Gemini receives only the compact numeric output — it never influences the financial metrics
+            or the LOW / MODERATE / HIGH classification.
             All thresholds are clearly labelled as prototype thresholds throughout the application.
           </p>
         </div>
@@ -912,7 +915,7 @@ const RAI_PRINCIPLES = [
   { icon: '🔍', title: 'Transparency',           text: 'Every calculation, threshold, and classification is shown. There are no hidden models, no opaque scoring, and no unexplained outputs.' },
   { icon: '👤', title: 'Human Oversight',         text: 'FinRisk AI is a decision-support prototype. Financial professionals must review and validate all outputs before any decision is made.' },
   { icon: '⚖️', title: 'Fairness',                text: 'The same prototype thresholds are applied consistently to all inputs. No demographic or non-financial factors influence the classification.' },
-  { icon: '🔒', title: 'Privacy',                  text: 'Financial data you enter is processed by the local analysis server for calculation only. This is a local prototype with no external data transmission.' },
+  { icon: '🔒', title: 'Privacy',                  text: 'Financial inputs are processed by the FinRisk AI backend for calculation. When the Gemini explanation is enabled, the backend may send the compact calculated risk results to the Google Gemini API to generate an explanation. Your raw financial inputs are not forwarded. The Gemini API key is kept server-side and is never exposed to the browser.' },
   { icon: '💡', title: 'Explainability',           text: 'The results page explains which metrics contributed to the overall risk level, what each value means, and why each threshold was triggered.' },
   { icon: '📋', title: 'Accuracy and Limitations', text: 'FinRisk AI uses prototype thresholds that are not universal financial standards. Results reflect a simplified model and do not replace professional analysis.' },
   { icon: '✅', title: 'Responsible Use',           text: 'FinRisk AI is intended for educational and prototype use only. It must not be used to make investment, lending, credit, or professional financial decisions.' },
@@ -1002,7 +1005,7 @@ function SDG12Section() {
 // ── About Section ─────────────────────────────────────────────────────────────
 
 const FUTURE_FEATURES = [
-  'IBM Granite / watsonx.ai integration for narrative financial analysis',
+  'IBM Granite / watsonx.ai as an alternative or additional AI explanation provider',
   'Financial document analysis (PDF/DOCX balance sheets)',
   'Retrieval-Augmented Generation (RAG) for financial intelligence',
   'Anomaly detection in multi-period financial data',
@@ -1047,6 +1050,9 @@ function AboutSection() {
             <p className="about-body">
               All metric calculations are deterministic — the same inputs always produce the same outputs.
               No AI model calculates, modifies, or overrides any metric value or risk classification.
+              Gemini AI is used separately by the backend to generate an optional plain-language explanation
+              of the already-calculated results; it does not influence the financial metrics or the
+              Prototype Financial Risk Indicator.
               Thresholds are clearly labelled as prototype thresholds throughout the application.
             </p>
 
@@ -1063,10 +1069,10 @@ function AboutSection() {
               <div className="future-card-title">
                 <span aria-hidden="true">🔭</span> Future Scope
               </div>
-              <div className="future-not-impl">Not implemented in current MVP</div>
+              <div className="future-not-impl">Not yet implemented</div>
               <p style={{ fontSize: '12.5px', color: 'var(--color-text-muted)', marginBottom: '14px', lineHeight: '1.6' }}>
+                The current MVP includes deterministic financial analysis and optional Gemini AI explanations.
                 The following features may be added in future versions.
-                The current MVP operates independently of all external AI services.
               </p>
               {FUTURE_FEATURES.map((f) => (
                 <div key={f} className="future-item">
