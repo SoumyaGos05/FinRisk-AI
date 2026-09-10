@@ -336,7 +336,7 @@ class TestFinancialRiskAPIWithAI:
         with patch.object(ai_controller, "_build_provider", return_value=mock_provider):
             with patch("backend.ai.controller.settings") as mock_settings:
                 mock_settings.GEMINI_API_KEY = fake_key
-                mock_settings.GEMINI_MODEL = "gemini-2.5-flash"
+                mock_settings.GEMINI_MODEL = "gemini-3.6-flash"
                 mock_settings.AI_TIMEOUT_SECONDS = 10
                 response = client.post("/risk/financial", json=DEMO_FINANCIAL_PAYLOAD)
         assert fake_key not in response.text

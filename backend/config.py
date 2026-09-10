@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     # Leave GEMINI_API_KEY unset or empty to disable AI explanations entirely.
     # The deterministic financial engine always works without these settings.
     GEMINI_API_KEY: Optional[str] = None
-    GEMINI_MODEL: str = "gemini-2.5-flash"
+    GEMINI_MODEL: str = "gemini-3.6-flash"
     AI_TIMEOUT_SECONDS: int = 10
 
     model_config = SettingsConfigDict(

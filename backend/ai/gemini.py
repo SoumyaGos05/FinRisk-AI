@@ -67,7 +67,7 @@ class GeminiProvider(AIProvider):
 
     Args:
         api_key:         Google AI Studio API key.
-        model:           Gemini model ID, e.g. 'gemini-2.5-flash'.
+        model:           Gemini model ID, e.g. 'gemini-3.6-flash'.
         timeout_seconds: HTTP timeout for the provider call.
     """
 
