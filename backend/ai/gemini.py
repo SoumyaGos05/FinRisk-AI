@@ -137,6 +137,7 @@ class GeminiProvider(AIProvider):
                 {"parts": [{"text": prompt}]}
             ],
             "generationConfig": {
+                "thinkingConfig": {"thinkingLevel": "minimal"},
                 "maxOutputTokens": 200,
                 "temperature": 0.2,
             },
