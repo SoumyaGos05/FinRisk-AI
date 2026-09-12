@@ -172,10 +172,15 @@ class GeminiProvider(AIProvider):
         except Exception as exc:
             raise AIProviderError("Gemini response is not valid JSON.") from exc
 
-        # Extract text from candidates[0].content.parts[0].text
+        # Gemini may return internal thought parts before the final response.
         try:
-            text: str = (
-                data["candidates"][0]["content"]["parts"][0]["text"]
+            parts = data["candidates"][0]["content"]["parts"]
+            text = "".join(
+                part["text"]
+                for part in parts
+                if isinstance(part, dict)
+                and part.get("thought") is not True
+                and isinstance(part.get("text"), str)
             )
         except (KeyError, IndexError, TypeError) as exc:
             raise AIProviderError(
