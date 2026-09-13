@@ -1,176 +1,327 @@
 # FinRisk AI
 
-**AI-Assisted Financial Risk Analysis & Sustainable Decision Support**
+### AI-Assisted Financial Risk Analysis & Sustainable Decision Support
 
-FinRisk AI is a web-based financial risk analysis and decision-support MVP. It evaluates key financial indicators using a deterministic Python risk engine and provides a natural-language explanation of the calculated result using Google Gemini.
+FinRisk AI is a web-based financial risk analysis application that evaluates a company's financial indicators and classifies its overall financial risk as **LOW, MODERATE, or HIGH**.
 
-The system is designed to make financial risk information easier to understand while keeping human judgment involved in consequential financial decisions.
+The project combines a **deterministic Python risk engine** with **Google Gemini** as an AI explanation layer. The risk calculation is performed using predefined financial rules and thresholds, while Gemini explains the already-calculated results in simple language.
+
+> **Important:** Gemini does not calculate or override the financial risk classification. It only provides an explanatory summary of the deterministic analysis.
 
 ---
 
 ## Features
 
-* Company/ticker-based financial analysis
-* Financial data retrieval using **yfinance**
-* Deterministic financial risk calculation using Python
-* Threshold-based **LOW / MODERATE / HIGH** risk classification
-* Analysis of multiple financial indicators:
+* Financial risk analysis from company financial data
+* Revenue Growth analysis
+* Profit Growth analysis
+* Debt-to-Equity Ratio analysis
+* Current Ratio analysis
+* Net Profit Margin analysis
+* Overall risk classification:
 
-  * Revenue Growth
-  * Profit Growth
-  * Debt-to-Equity Ratio
-  * Current Ratio
-  * Net Profit Margin
-* Natural-language result explanation using **Google Gemini**
+  * LOW
+  * MODERATE
+  * HIGH
+* AI-generated explanation using Google Gemini
+* Deterministic risk calculation independent of the AI provider
+* Graceful fallback when Gemini is unavailable
+* In-memory caching for repeated AI explanations
+* Financial data retrieval using `yfinance`
 * React-based web dashboard
 * FastAPI backend
-* Automated backend tests using pytest
-* Responsible AI disclaimer for financial decision support
-* Frontend deployment through Netlify
-* Backend/API deployment through Render
-
-### Important AI distinction
-
-The risk classification is performed by the **deterministic Python risk engine** using predefined thresholds.
-
-**Google Gemini does not independently determine the risk level.** It is used to explain the already-calculated result in natural language.
-
-**IBM Bob** was used as development/coding assistance during implementation. It is not the financial risk engine or the AI model used for explanations.
+* SQLite database with SQLAlchemy
+* Automated backend tests
+* Deployed frontend and backend architecture
 
 ---
 
-## Technology Stack
+## How the AI Works
 
-| Component              | Technology                       |
-| ---------------------- | -------------------------------- |
-| Backend                | Python · FastAPI                 |
-| Frontend               | React · Vite                     |
-| Financial Data         | yfinance                         |
-| Risk Analysis          | Python deterministic risk engine |
-| AI Explanation         | Google Gemini API                |
-| Database               | SQLite · SQLAlchemy              |
-| Testing                | pytest                           |
-| Development Assistance | IBM Bob                          |
-| Frontend Deployment    | Netlify                          |
-| Backend/API Deployment | Render                           |
+FinRisk AI uses two separate layers:
 
----
+### 1. Deterministic Risk Engine
 
-## Prerequisites
+The Python risk engine calculates the financial indicators and determines the overall risk classification using predefined rules and thresholds.
 
-| Tool    | Minimum Version |
-| ------- | --------------- |
-| Python  | 3.11            |
-| Node.js | 18              |
-| npm     | 9               |
+The current indicators are:
+
+| Indicator         | Purpose                                      |
+| ----------------- | -------------------------------------------- |
+| Revenue Growth    | Measures change in company revenue           |
+| Profit Growth     | Measures change in company profit            |
+| Debt-to-Equity    | Indicates relative debt compared with equity |
+| Current Ratio     | Indicates short-term liquidity               |
+| Net Profit Margin | Measures profitability relative to revenue   |
+
+The system combines these results to produce an overall:
+
+**LOW / MODERATE / HIGH** risk classification.
+
+### 2. Gemini Explanation Layer
+
+After the deterministic analysis is completed, Google Gemini receives the calculated results and produces a short natural-language explanation.
+
+Gemini is instructed to:
+
+* Use only the supplied financial values
+* Not recalculate financial metrics
+* Not invent financial values
+* Not change the risk classification
+* Not provide professional financial advice
+* Recommend human/professional review for consequential decisions
+
+If Gemini is unavailable, the deterministic financial analysis can still be returned.
 
 ---
 
 ## System Workflow
 
-The application follows this general workflow:
-
 ```text
-Company / Ticker Input
+Company / Financial Data
         ↓
-React + Vite Frontend
-        ↓
-FastAPI + Python Backend
-        ↓
-Financial Data via yfinance
+Financial Data Processing
         ↓
 Deterministic Risk Engine
         ↓
 Financial Metrics
         ↓
-Predefined Threshold Evaluation
+LOW / MODERATE / HIGH Risk Classification
         ↓
-LOW / MODERATE / HIGH
+AI Explanation Controller
         ↓
-Google Gemini Explanation
+Google Gemini
         ↓
-Risk Dashboard
+Short Natural-Language Explanation
+        ↓
+React Dashboard
 ```
 
-The calculation and AI explanation stages are intentionally separated to make the system easier to understand and review.
+The AI explanation is therefore an **additional interpretation layer**, not the source of the risk classification.
 
 ---
 
-## Financial Indicators
+## Technology Stack
 
-FinRisk AI currently evaluates the following indicators:
+### Frontend
 
-### 1. Revenue Growth
+* React
+* Vite
+* JavaScript
+* CSS
 
-Measures the change in company revenue over the available financial periods.
+### Backend
 
-### 2. Profit Growth
+* Python
+* FastAPI
+* SQLAlchemy
+* SQLite
+* Pydantic
 
-Measures the change in company profit over the available financial periods.
+### Financial Data
 
-### 3. Debt-to-Equity Ratio
+* `yfinance`
 
-Provides an indication of the company's leverage relative to shareholder equity.
+### AI
 
-### 4. Current Ratio
+* Google Gemini API
+* Direct REST integration using `httpx`
 
-Provides an indication of the company's short-term liquidity position.
+### Testing
 
-### 5. Net Profit Margin
+* pytest
 
-Measures the proportion of revenue retained as net profit.
+### Development Assistance
 
-These indicators are evaluated using predefined thresholds to produce the overall risk classification.
+* IBM Bob
+
+### Deployment
+
+* Netlify — Frontend
+* Render — Backend/API
+
+---
+
+## Project Structure
+
+```text
+FinRisk AI/
+│
+├── backend/
+│   ├── ai/
+│   │   ├── controller.py
+│   │   ├── gemini.py
+│   │   ├── provider.py
+│   │   └── __init__.py
+│   │
+│   ├── api/
+│   │   └── ...
+│   │
+│   ├── config.py
+│   │
+│   ├── data/
+│   │   └── ...
+│   │
+│   ├── db/
+│   │   └── ...
+│   │
+│   ├── logic/
+│   │   ├── risk_engine.py
+│   │   └── recommender.py
+│   │
+│   ├── models/
+│   │   └── ...
+│   │
+│   ├── main.py
+│   └── __init__.py
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── RiskDashboard.jsx
+│   │   │   └── RiskDashboard.css
+│   │   └── ...
+│   ├── package.json
+│   └── vite.config.js
+│
+├── tests/
+│   └── ...
+│
+├── requirements.txt
+├── README.md
+└── .gitignore
+```
+
+---
+
+## Backend AI Architecture
+
+The AI integration is separated into three components:
+
+### `backend/ai/controller.py`
+
+Acts as the gateway between the API and the AI provider.
+
+It:
+
+* Creates a fingerprint of the calculated financial results
+* Checks the in-memory cache
+* Limits provider calls
+* Calls Gemini when necessary
+* Stores successful explanations
+* Handles provider failures
+* Allows the deterministic analysis to continue if AI is unavailable
+
+### `backend/ai/gemini.py`
+
+Contains the Google Gemini provider implementation.
+
+The application communicates with Gemini through its REST API using `httpx`, without requiring a Google SDK.
+
+### `backend/ai/provider.py`
+
+Defines the common AI provider interface and provider-level error handling.
+
+This keeps the AI layer separate from the financial calculation logic.
+
+---
+
+## Financial Risk Indicators
+
+### Revenue Growth
+
+Shows the percentage change in company revenue.
+
+### Profit Growth
+
+Shows the percentage change in company profit.
+
+### Debt-to-Equity Ratio
+
+Indicates the relationship between company debt and equity.
+
+### Current Ratio
+
+Provides an indication of short-term liquidity.
+
+### Net Profit Margin
+
+Shows the percentage of revenue retained as net profit.
+
+These indicators are combined using predefined thresholds to determine the overall risk level.
 
 ---
 
 ## Risk Classification
 
-The current prototype uses deterministic threshold-based logic.
-
-The overall result is classified as:
+The current MVP uses predefined threshold-based rules.
 
 ```text
-LOW RISK
-MODERATE RISK
-HIGH RISK
+Financial Indicators
+        ↓
+Threshold Evaluation
+        ↓
+Risk Assessment
+        ↓
+LOW / MODERATE / HIGH
 ```
 
-The risk engine is implemented in Python and does not rely on Gemini to decide the classification.
+This approach makes the current risk classification transparent and deterministic.
 
-Gemini is used after classification to provide a human-readable explanation of the result and the underlying financial indicators.
+The project does **not** currently claim to use a trained machine-learning model for the final risk classification.
 
 ---
 
 ## Responsible AI
 
-FinRisk AI is designed as an analytical and explanatory prototype.
+FinRisk AI is designed so that the AI component does not become the sole decision-maker.
 
-The system does not replace professional financial analysis or human judgment.
+The system follows these principles:
 
-Important principles include:
+* Financial calculations are performed before the AI explanation.
+* Gemini receives already-calculated values.
+* Gemini cannot override the deterministic risk classification.
+* AI failures do not block the underlying financial analysis.
+* API credentials remain on the backend.
+* AI-generated explanations are treated as informational.
+* Important financial decisions should receive appropriate human or professional review.
 
-* **Transparency:** The main risk classification is based on predefined financial rules and thresholds.
-* **Explainability:** Gemini provides a natural-language explanation of the calculated result.
-* **Human Oversight:** Users remain responsible for reviewing and interpreting the information.
-* **Responsible Use:** The output should not be treated as guaranteed financial advice or an autonomous financial decision.
-* **Privacy:** Sensitive credentials and environment variables are kept outside the committed source code.
-
-> **Disclaimer:** AI-generated explanations are provided for informational purposes and should not replace independent or professional financial judgment for consequential decisions.
+FinRisk AI is a decision-support prototype and is **not a substitute for professional financial, investment, lending, credit, tax, or legal advice**.
 
 ---
 
 ## Sustainability Context
 
-FinRisk AI is a finance-focused project developed under the **1M1B AI for Sustainability Virtual Internship**.
+FinRisk AI connects financial technology with responsible decision-making.
 
-The project's sustainability relevance is focused on supporting more responsible and informed financial decision-making.
+The project focuses on improving awareness of financial health and encouraging more informed evaluation of financial information.
 
-The project is primarily aligned with:
+Its sustainability relevance is primarily connected to:
 
-**SDG 12 — Responsible Consumption and Production**
+### SDG 12 — Responsible Consumption and Production
 
-The current prototype does **not** calculate carbon emissions, environmental impact, ESG scores, or other environmental measurements.
+The project supports responsible decision-making by making financial information easier to interpret and review.
+
+The current MVP does **not** calculate:
+
+* Carbon emissions
+* Energy consumption
+* Water usage
+* ESG scores
+* Environmental impact metrics
+
+These areas may be considered in future versions if reliable sustainability data is incorporated.
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+* Python 3.11+
+* Node.js
+* npm
+* Git
 
 ---
 
@@ -178,152 +329,103 @@ The current prototype does **not** calculate carbon emissions, environmental imp
 
 From the project root:
 
-### 1. Create a project-local virtual environment
-
 ```bash
 python -m venv .venv
 ```
 
-### 2. Activate the virtual environment
+### Windows
 
-**Windows:**
-
-```bash
+```cmd
 .venv\Scripts\activate
 ```
 
-**macOS / Linux:**
+Install the Python dependencies:
 
-```bash
-source .venv/bin/activate
+```cmd
+pip install -r requirements.txt
 ```
 
-### 3. Install dependencies
+Create your environment configuration as required by the project.
 
-```bash
-pip install -r requirements.txt -r requirements-dev.txt
+The Gemini integration uses:
+
+```text
+GEMINI_API_KEY
+GEMINI_MODEL
+AI_TIMEOUT_SECONDS
 ```
 
-### 4. Create the local environment file
+Database and application configuration are handled through the backend configuration system.
 
-**Windows Command Prompt:**
+---
 
-```bash
-copy .env.example .env
+## Run the Backend
+
+From the project root:
+
+```cmd
+.venv\Scripts\python -m uvicorn backend.main:app --reload
 ```
 
-**macOS / Linux:**
+The FastAPI development server will normally be available at:
 
-```bash
-cp .env.example .env
+```text
+http://127.0.0.1:8000
 ```
-
-Configure the required environment variables in `.env` as needed.
-
-**Never commit `.env` to Git.**
 
 ---
 
 ## Frontend Setup
 
-From the project root:
+Open another terminal and navigate to the frontend:
 
-```bash
+```cmd
 cd frontend
+```
+
+Install dependencies:
+
+```cmd
 npm install
 ```
 
-Create the local frontend environment file from the provided example.
+Run the development server:
 
-**Windows Command Prompt:**
-
-```bash
-copy .env.example .env
-```
-
-**macOS / Linux:**
-
-```bash
-cp .env.example .env
-```
-
-The frontend API configuration uses:
-
-```text
-VITE_API_BASE_URL
-```
-
----
-
-## Running the Application Locally
-
-Open two terminals.
-
-### Terminal 1 — Backend
-
-From the project root, with the virtual environment activated:
-
-```bash
-uvicorn backend.main:app --reload
-```
-
-The API will be available at:
-
-```text
-http://localhost:8000
-```
-
-Interactive API documentation:
-
-```text
-http://localhost:8000/docs
-```
-
-### Terminal 2 — Frontend
-
-From the `frontend/` directory:
-
-```bash
+```cmd
 npm run dev
 ```
 
-The frontend will normally be available at:
+The Vite development server will display the local frontend address in the terminal.
+
+---
+
+## Production Build
+
+To create a production build:
+
+```cmd
+npm run build
+```
+
+The production files are generated in:
 
 ```text
-http://localhost:5173
+frontend/dist/
 ```
 
 ---
 
-## Running Tests
+## Testing
 
-All tests can be run from the project root with the virtual environment activated.
+Backend tests are written using pytest.
 
-### Run all tests
+From the project root:
 
-```bash
-pytest
+```cmd
+.venv\Scripts\python -m pytest
 ```
 
-### Run with verbose output
-
-```bash
-pytest -v
-```
-
-### Run a specific test file
-
-```bash
-pytest tests/test_api.py
-```
-
-### Run a specific test
-
-```bash
-pytest tests/test_api.py::test_health_endpoint -v
-```
-
-The project has been tested with the backend test suite during development.
+The project was tested during development to verify the risk engine, API behaviour, financial-data handling, and AI integration components.
 
 ---
 
@@ -331,106 +433,58 @@ The project has been tested with the backend test suite during development.
 
 ### Frontend
 
-The frontend is deployed using **Netlify**.
+The current frontend is deployed using Netlify:
 
 **Live Application:**
-
 https://finriskai.netlify.app/
 
 ### Backend
 
-The FastAPI backend/API is deployed separately using **Render**.
+The FastAPI backend is designed for deployment using Render.
 
-The frontend communicates with the deployed backend through the configured API base URL.
-
-> Deployment availability depends on the respective hosting services and their current runtime status.
-
----
-
-## Project Structure
-
-```text
-finrisk-ai/
-├── backend/
-│   ├── api/                 # FastAPI route handlers
-│   ├── config.py            # Application configuration and environment settings
-│   ├── data/                # Financial data ingestion and processing
-│   ├── db/
-│   │   └── session.py       # Database engine and session management
-│   ├── logic/               # Financial risk and business logic
-│   │   ├── risk_engine.py   # Deterministic financial risk calculations
-│   │   └── recommender.py   # Risk classification/recommendation logic
-│   ├── main.py              # FastAPI application entry point
-│   └── models/
-│       ├── orm.py           # SQLAlchemy ORM definitions
-│       └── schemas.py       # Pydantic request/response schemas
-│
-├── frontend/
-│   ├── src/
-│   │   ├── api.js           # Central API configuration
-│   │   ├── components/
-│   │   │   └── RiskDashboard.jsx
-│   │   └── App.jsx          # Root React component
-│   └── .env.example
-│
-├── tests/
-│   ├── conftest.py          # Shared test fixtures
-│   ├── test_api.py          # API endpoint tests
-│   └── test_config.py       # Configuration tests
-│
-├── .env.example             # Environment variable template
-├── pytest.ini
-├── requirements.txt
-├── requirements-dev.txt
-└── README.md
-```
+The frontend communicates with the backend through the configured API base URL.
 
 ---
 
 ## Environment Variables
 
-Environment variables are used for local configuration and secrets.
+The project uses environment-based configuration for sensitive or environment-specific values.
 
-| Variable            | Description                          |
-| ------------------- | ------------------------------------ |
-| `DATABASE_URL`      | SQLAlchemy database connection URL   |
-| `APP_ENV`           | Application runtime environment      |
-| `VITE_API_BASE_URL` | Backend API URL used by the frontend |
-| `GEMINI_API_KEY`    | Google Gemini API key                |
+Important configuration includes:
 
-The exact variables required may depend on the configured local/deployment environment.
+```text
+DATABASE_URL
+APP_ENV
+VITE_API_BASE_URL
+GEMINI_API_KEY
+GEMINI_MODEL
+AI_TIMEOUT_SECONDS
+```
 
-> **Never commit `.env` files or API keys to Git.** They are excluded through `.gitignore`.
+### Security
 
----
+The Gemini API key must remain on the backend and should never be placed directly in frontend source code or committed to GitHub.
 
-## Development Guidelines
-
-When adding a new feature:
-
-1. Add business logic to `backend/logic/` where appropriate.
-2. Keep financial calculations independent from HTTP and database concerns where possible.
-3. Add API routes in `backend/api/`.
-4. Use the existing database dependency pattern where database access is required.
-5. Add or update Pydantic schemas in `backend/models/schemas.py`.
-6. Add or update ORM models only when a database table is required.
-7. Add corresponding tests.
-8. Run the test suite before committing changes.
+The project's `.gitignore` should exclude local environment files and other sensitive/generated files.
 
 ---
 
 ## Current Scope
 
-The current MVP focuses on:
+The current FinRisk AI MVP provides:
 
-* Financial data retrieval
+* Financial data processing
 * Financial indicator calculation
-* Rule/threshold-based risk classification
-* AI-assisted explanation
-* Web-based presentation of results
-* Responsible financial decision support
+* Rule-based risk classification
+* Risk recommendation/explanation logic
+* Gemini-powered natural-language explanation
+* React dashboard
+* FastAPI backend
+* SQLite/SQLAlchemy data layer
+* Automated testing
+* Web deployment
 
-The project is intended as a working prototype rather than a production banking, investment-management, or enterprise risk platform.
+The system is intended as a **working prototype for financial risk analysis and responsible decision support**.
 
 ---
 
@@ -438,45 +492,68 @@ The project is intended as a working prototype rather than a production banking,
 
 Potential future improvements include:
 
-* ML-based risk prediction using suitable historical datasets
-* Financial trend and anomaly analysis
-* Sector benchmarking
-* Scenario analysis
-* Early-warning monitoring
-* Expanded sustainability-related financial indicators
+* Machine-learning-based risk prediction
+* Historical financial trend analysis
+* Anomaly and early-warning detection
+* Sector-specific benchmarking
+* Scenario and stress testing
+* More financial indicators
+* Explainable ML models
+* Historical risk tracking
+* More advanced sustainability indicators
+* Improved financial-data coverage
+* Additional AI providers
+* Larger-scale deployment and monitoring
 
-These are **future enhancements and are not part of the current MVP**.
+These features are **future possibilities and are not represented as current capabilities of the MVP**.
 
 ---
 
 ## Limitations
 
-The current prototype has several limitations:
+FinRisk AI is a prototype and has several limitations:
 
-* Risk classification depends on predefined thresholds.
-* Financial data availability depends on the selected data source.
-* AI-generated explanations may require human review.
-* The system is not intended to provide guaranteed investment or lending decisions.
-* The current prototype does not provide ESG or environmental scoring.
-* Future machine-learning capabilities would require suitable historical datasets and additional validation.
+* Financial analysis depends on the availability and quality of financial data.
+* Current risk classification is threshold-based rather than trained from a historical labelled dataset.
+* The AI explanation depends on the availability of the Gemini API.
+* The application should not be used as the sole basis for consequential financial decisions.
+* The current sustainability connection is focused on responsible financial decision-making rather than direct environmental measurement.
 
 ---
 
 ## Project Context
 
-FinRisk AI was developed as part of the:
+This project was developed as part of the:
 
 **1M1B AI for Sustainability Virtual Internship**
 
-in collaboration with:
+In collaboration with:
 
-* **IBM SkillsBuild**
-* **AICTE**
+* IBM SkillsBuild
+* AICTE
 
-The project demonstrates how AI-assisted explanations can be combined with transparent rule-based financial analysis to support more understandable and responsible financial decision-making.
+Development assistance was provided using **IBM Bob**, while Google Gemini is integrated into the application itself as the natural-language explanation provider.
+
+---
+
+## Development Philosophy
+
+The project follows a separation between:
+
+```text
+Financial Logic
+      ↓
+Deterministic Result
+      ↓
+AI Explanation
+```
+
+This design helps keep the core financial assessment predictable while using generative AI where it provides the most value: **explaining already-calculated results in an accessible way**.
 
 ---
 
 ## License
 
-This project is intended as an academic/internship prototype.
+This project was created as an educational and internship prototype.
+
+Please review the repository owner and project terms before reusing the source code for commercial purposes.
