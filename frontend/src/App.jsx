@@ -407,7 +407,7 @@ function AnalyzeSection({ onResults, isDemoLoaded, setIsDemoLoaded }) {
     };
 
     try {
-      const base = apiBase || 'http://localhost:8000';
+      const base = apiBase;
       const res = await fetch(`${base}/risk/financial`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -425,7 +425,7 @@ function AnalyzeSection({ onResults, isDemoLoaded, setIsDemoLoaded }) {
       const result = await res.json();
       onResults(result, isDemoLoaded);
     } catch {
-      setApiError('Unable to reach the server. Please ensure the backend is running on port 8000.');
+      setApiError('Unable to reach the backend server. Please try again.');
     } finally {
       setLoading(false);
     }
