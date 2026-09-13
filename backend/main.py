@@ -39,9 +39,11 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-    "http://localhost:5173",
-    "https://tourmaline-marzipan-02a9ad.netlify.app",
-],
+        "http://localhost:5173",
+        "https://tourmaline-marzipan-02a9ad.netlify.app",
+        "https://finriskai.netlify.app",
+        "https://6aa6d1761d59db0008b840d7--finriskai.netlify.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
